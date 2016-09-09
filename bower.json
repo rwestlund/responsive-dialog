@@ -1,0 +1,27 @@
+{
+    "name": "polymer-responsive-dialog",
+    "decription": "A Material Design dialog that works with desktop and mobile",
+    "keywords": [
+        "polymer",
+        "mobile",
+        "dialog",
+        "responsive",
+        "paper"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/rwestlund/paper-dialog.git"
+    },
+    "main": [
+        "responsive-dialog.html"
+    ],
+    "dependencies": {
+        "polymer": ">=1.6.0",
+        "iron-elements": ">=1.0.0",
+        "paper-elements": ">=1.0.0"
+    },
+    "authors": [
+        "Randy Westlund <rwestlun@gmail.com>"
+    ],
+    "license": "BSD-3-Clause"
+}

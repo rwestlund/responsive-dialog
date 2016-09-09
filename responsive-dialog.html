@@ -1,0 +1,193 @@
+<!-- Copyright (c) 2016, Randy Westlund. All rights reserved. -->
+<!-- This code is under the BSD-2-Clause license. -->
+
+<!-- This module displays a responsive dialog that is fullscreen on mobile and
+     a normal paper-dialog on desktop, in accordance with Google's Material
+     Design guidelines.  -->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-media-query/iron-media-query.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+
+<dom-module id="responsive-dialog">
+    <template>
+        <style>
+            :host {
+                display: none;
+            }
+            :host([opened]) {
+                display: block;
+            }
+            :host([mobile]) {
+                position:   fixed;
+                left:       0;
+                right:      0;
+                top:        0;
+                bottom:     0;
+                z-index:    103;
+                background-color: var(--primary-background-color);
+            }
+            div.fullscreen-column {
+                padding-left:   1em;
+                padding-right:  1em;
+                padding-bottom: 2em;
+            }
+            paper-dialog {
+                min-width: 25em;
+            }
+            paper-dialog-scrollable {
+                margin-top: 0em;
+            }
+        </style>
+
+        <!-- Determine which layout to use. -->
+        <iron-media-query query="(max-width: [[responsiveWidth]])"
+                query-matches="{{mobile}}">
+        </iron-media-query>
+
+        <!-- This normal paper-dialog is used on desktop. -->
+        <template is="dom-if" if="[[!mobile]]">
+            <paper-dialog id="dialog"
+                    with-backdrop no-cancel-on-outside-click>
+                <h2>[[title]]</h2>
+                <paper-dialog-scrollable>
+                    <content select="*"></content>
+                </paper-dialog-scrollable>
+                <div class="buttons">
+                    <template is="dom-if" if="[[dismissText]]">
+                        <paper-button dialog-dismiss>
+                            [[dismissText]]
+                        </paper-button>
+                    </template>
+                    <template is="dom-if" if="[[confirmText]]">
+                        <paper-button dialog-confirm>
+                            [[confirmText]]
+                        </paper-button>
+                    </template>
+                </div>
+            </paper-dialog>
+        </template>
+
+        <!-- This custom fullscreen dialog is used on mobile. -->
+        <template is="dom-if" if="[[mobile]]">
+            <paper-header-panel>
+                <paper-toolbar>
+                    <paper-icon-button icon="[[get_icon()]]" on-tap="dismiss">
+                    </paper-icon-button>
+                    <span class="title">[[title]]</span>
+                    <!-- If there's no dismissText, then we're just showing a
+                         back arrow. -->
+                    <template is="dom-if" if="[[dismissText]]">
+                        <paper-button dialog-confirm on-tap="confirm">
+                            [[confirmText]]
+                        </paper-button>
+                    </template>
+                </paper-toolbar>
+
+                <div class="fullscreen-column">
+                    <content select="*"></content>
+                    <br />
+                    <br />
+                </div>
+            </paper-header-panel>
+        </template>
+
+        <!-- TODO after opening the dialog on a large screen, it will not open
+             on a small one. I belive this is because the <content> in the first
+             block gobbles up the light DOM and doesn't give it back when it is
+             removed. -->
+
+        <!-- TODO this dialog should capture and close on a mobile device's
+             back arrow. -->
+    </template>
+</dom-module>
+
+<script>
+    (function () {
+        'use strict';
+        Polymer({
+            is: 'responsive-dialog',
+            properties: {
+                // Anything smaller than this is mobile.
+                responsiveWidth: {
+                    type: String,
+                    value: '600px'
+                },
+                // What text to use for the dismiss button. If not defined, no
+                // dismiss button will be shown. On mobile, defining this
+                // causes an X rather than a back arrow.
+                dismissText: {
+                    type: String,
+                    value: "",
+                },
+                // What text to use for the confirm button.
+                confirmText: {
+                    type: String,
+                    value: "Save",
+                },
+                // Whether we're on mobile or desktop. Determined with a media
+                // query.
+                mobile: {
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true,
+                },
+                opened: {
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true,
+                },
+            },
+            listeners: {
+                'iron-overlay-closed': '_prevent_bubble_hack',
+            },
+            // HACK: The paper-dropdown-menu element implements
+            // iron-overlay-behavior, which means that is fires
+            // iron-overlay-closed, which bubbles all the way up here. On
+            // desktop, it would close this dialog. On mobile, it would keep
+            // causing havoc in parent elements. This should be fixed in a
+            // future version of Polymer. See:
+            // https://github.com/PolymerElements/iron-overlay-behavior/issues/70
+            // https://github.com/PolymerElements/paper-dropdown-menu/issues/87
+            _prevent_bubble_hack: function(e, reason) {
+                // If the target is this (i.e. we used this.fire(), or if the
+                // target is #dialog, then it's a valid close and we should let
+                // it bubble.
+                if (e.target === this || e.target === this.$$('#dialog'))
+                    // For desktop, this won't have been set yet.
+                    this.opened = false;
+                // Otherwise it must be from a the light DOM. Stop it here.
+                else e.stopImmediatePropagation();
+            },
+            open: function() {
+                this.opened = true;
+                if (!this.mobile) this.$$('#dialog').open();
+            },
+            close: function() {
+                if (!this.mobile) this.$$('#dialog').close();
+                else this.dismiss();
+            },
+            // Only used on mobile.
+            dismiss: function(e) {
+                //TODO this tap still highlights the menu icon behind it :/
+                e.stopPropagation();
+                this.opened = false;
+                this.fire('iron-overlay-closed', { canceled: true });
+            },
+            // Only used on mobile.
+            confirm: function() {
+                this.opened = false;
+                this.fire('iron-overlay-closed', { confirmed: true });
+            },
+            // If no dismissText, use <- rather than X.
+            get_icon: function() {
+                if (this.dismissText) return "icons:close";
+                return "icons:arrow-back";
+            },
+        });
+    })();
+</script>
