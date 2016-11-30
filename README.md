@@ -19,6 +19,13 @@ https://material.google.com).
     - What text to use for the confirm button.
     - Default: `"Save"`
 
+## Mixins
+
+- `--responsive-dialog-paper-dialog`
+    - Applied to the `paper-dialog` used on screens larger than
+      `responsiveWidth`.  You may want to set a certain width here, to prevent
+      the dialog from dynamically growing.
+
 ## API
 
 Call `.open()` and `.close()`, just like with the standard `paper-dialog`. When
