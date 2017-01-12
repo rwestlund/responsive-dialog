@@ -172,6 +172,9 @@
                 if (!this.mobile) this.$$('#dialog').close();
                 else this.dismiss();
             },
+            notifyResize: function() {
+                if (!this.mobile) this.$$("#dialog").notifyResize();
+            },
             // Only used on mobile.
             dismiss: function(e) {
                 //TODO this tap still highlights the menu icon behind it :/

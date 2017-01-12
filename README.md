@@ -28,9 +28,10 @@ https://material.google.com).
 
 ## API
 
-Call `.open()` and `.close()`, just like with the standard `paper-dialog`. When
-the dialog is resolved, it will emit the `iron-overlay-closed` event, to which
-it passes either `{ resolved: true }` or `{ canceled: true}`.
+Call `.open()`, `.close()`, and `.notifyResize()`, just like with the standard
+`paper-dialog`. When the dialog is resolved, it will emit the
+`iron-overlay-closed` event, to which it passes either `{ resolved: true }` or
+`{ canceled: true}`.
 
 ## Example
 
