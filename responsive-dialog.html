@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2016, Randy Westlund. All rights reserved. -->
+<!-- Copyright (c) 2016-2017, Randy Westlund. All rights reserved. -->
 <!-- This code is under the BSD-2-Clause license. -->
 
 <!-- This module displays a responsive dialog that is fullscreen on mobile and
@@ -51,56 +51,46 @@
         </iron-media-query>
 
         <!-- This normal paper-dialog is used on desktop. -->
-        <template is="dom-if" if="[[!mobile]]">
-            <paper-dialog id="dialog"
-                    with-backdrop no-cancel-on-outside-click>
-                <h2>[[title]]</h2>
-                <paper-dialog-scrollable>
-                    <content select="*"></content>
-                </paper-dialog-scrollable>
-                <div class="buttons">
-                    <template is="dom-if" if="[[dismissText]]">
-                        <paper-button dialog-dismiss>
-                            [[dismissText]]
-                        </paper-button>
-                    </template>
-                    <template is="dom-if" if="[[confirmText]]">
-                        <paper-button dialog-confirm>
-                            [[confirmText]]
-                        </paper-button>
-                    </template>
-                </div>
-            </paper-dialog>
-        </template>
+        <paper-dialog id="dialog" with-backdrop no-cancel-on-outside-click>
+            <h2>[[title]]</h2>
+            <paper-dialog-scrollable id="desktop_slot">
+                <!-- Light DOM goes here. -->
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <template is="dom-if" if="[[dismissText]]">
+                    <paper-button dialog-dismiss>
+                        [[dismissText]]
+                    </paper-button>
+                </template>
+                <template is="dom-if" if="[[confirmText]]">
+                    <paper-button dialog-confirm>
+                        [[confirmText]]
+                    </paper-button>
+                </template>
+            </div>
+        </paper-dialog>
 
         <!-- This custom fullscreen dialog is used on mobile. -->
-        <template is="dom-if" if="[[mobile]]">
-            <paper-header-panel>
-                <paper-toolbar>
-                    <paper-icon-button icon="[[get_icon()]]" on-tap="dismiss">
-                    </paper-icon-button>
-                    <span class="title">[[title]]</span>
-                    <!-- If there's no dismissText, then we're just showing a
-                         back arrow. -->
-                    <template is="dom-if" if="[[dismissText]]">
-                        <paper-button dialog-confirm on-tap="confirm">
-                            [[confirmText]]
-                        </paper-button>
-                    </template>
-                </paper-toolbar>
+        <paper-header-panel hidden$="[[!mobile]]">
+            <paper-toolbar>
+                <paper-icon-button icon="[[get_icon()]]" on-tap="dismiss">
+                </paper-icon-button>
+                <span class="title">[[title]]</span>
+                <!-- If there's no dismissText, then we're just showing a
+                     back arrow. -->
+                <template is="dom-if" if="[[dismissText]]">
+                    <paper-button dialog-confirm on-tap="confirm">
+                        [[confirmText]]
+                    </paper-button>
+                </template>
+            </paper-toolbar>
 
-                <div class="fullscreen-column">
-                    <content select="*"></content>
-                    <br />
-                    <br />
-                </div>
-            </paper-header-panel>
-        </template>
-
-        <!-- TODO after opening the dialog on a large screen, it will not open
-             on a small one. I belive this is because the <content> in the first
-             block gobbles up the light DOM and doesn't give it back when it is
-             removed. -->
+            <div id="mobile_slot" class="fullscreen-column">
+                <!-- Light DOM goes here. -->
+                <!-- This light DOM will be moved to the correct place. -->
+                <slot id="slot"></slot>
+            </div>
+        </paper-header-panel>
 
         <!-- TODO this dialog should capture and close on a mobile device's
              back arrow. -->
@@ -134,7 +124,7 @@
                 // query.
                 mobile: {
                     type: Boolean,
-                    value: false,
+                    value: true,
                     reflectToAttribute: true,
                 },
                 opened: {
@@ -143,8 +133,25 @@
                     reflectToAttribute: true,
                 },
             },
+            observers: [ "move_dom(mobile, opened)" ],
             listeners: {
                 'iron-overlay-closed': '_prevent_bubble_hack',
+            },
+            // When we change layouts, move the light DOM to the right place
+            // and open or close the paper-dialog as necessary.
+            move_dom: function(mobile, opened) {
+                if (!opened) return;
+                // TODO this can be more efficient if it checks whether it
+                // needs to be moved first, but it shows up as the second child
+                // rather than the first like I'd expect.
+                if (this.mobile) {
+                    Polymer.dom(this.$.mobile_slot).appendChild(this.$.slot);
+                    this.$.dialog.close();
+                }
+                else {
+                    Polymer.dom(this.$.desktop_slot).appendChild(this.$.slot);
+                    this.$.dialog.open();
+                }
             },
             // HACK: The paper-dropdown-menu element implements
             // iron-overlay-behavior, which means that is fires
@@ -156,24 +163,25 @@
             // https://github.com/PolymerElements/paper-dropdown-menu/issues/87
             _prevent_bubble_hack: function(e, reason) {
                 // If the target is this (i.e. we used this.fire(), or if the
-                // target is #dialog, then it's a valid close and we should let
-                // it bubble.
-                if (e.target === this || e.target === this.$$('#dialog'))
-                    // For desktop, this won't have been set yet.
+                // target is #dialog and the dialog is open, then it's a valid
+                // close and we should let it bubble.
+                if (e.target === this ||
+                        (e.target === this.$.dialog && !this.mobile))
                     this.opened = false;
                 // Otherwise it must be from a the light DOM. Stop it here.
                 else e.stopImmediatePropagation();
             },
             open: function() {
                 this.opened = true;
-                if (!this.mobile) this.$$('#dialog').open();
+                if (!this.mobile) this.$.dialog.open();
             },
             close: function() {
-                if (!this.mobile) this.$$('#dialog').close();
+                this.opened = false;
+                if (!this.mobile) this.$.dialog.close();
                 else this.dismiss();
             },
             notifyResize: function() {
-                if (!this.mobile) this.$$("#dialog").notifyResize();
+                if (!this.mobile) this.$.dialog.notifyResize();
             },
             // Only used on mobile.
             dismiss: function(e) {
