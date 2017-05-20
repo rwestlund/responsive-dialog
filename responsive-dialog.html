@@ -174,8 +174,8 @@
                 // If the target is this (i.e. we used this.fire(), or if the
                 // target is #dialog and the dialog is open, then it's a valid
                 // close and we should let it bubble.
-                if (e.target === this ||
-                        (e.target === this.$.dialog && !this.mobile))
+                if (!this.opened && (e.target === this ||
+                    (e.target === this.$.dialog && !this.mobile)))
                     this.opened = false;
                 // Otherwise it must be from a the light DOM. Stop it here.
                 else e.stopImmediatePropagation();
