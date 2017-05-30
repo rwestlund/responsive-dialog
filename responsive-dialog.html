@@ -74,7 +74,8 @@
         <!-- This custom fullscreen dialog is used on mobile. -->
         <paper-header-panel hidden$="[[!mobile]]">
             <paper-toolbar>
-                <paper-icon-button icon="[[get_icon()]]" on-tap="dismiss">
+                <paper-icon-button icon="[[get_icon(dismissText)]]"
+                        on-tap="dismiss">
                 </paper-icon-button>
                 <span class="title">[[title]]</span>
                 <!-- If there's no dismissText, then we're just showing a
@@ -201,9 +202,7 @@
                 this.fire('iron-overlay-closed', { confirmed: true });
             },
             // If no dismissText, use <- rather than X.
-            get_icon: function() {
-                if (this.dismissText) return "icons:close";
-                return "icons:arrow-back";
+            get_icon: dt => dt ? "icons:close" : "icons:arrow-back";
             },
         });
     })();
