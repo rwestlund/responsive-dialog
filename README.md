@@ -25,6 +25,8 @@ https://material.google.com).
     - Applied to the `paper-dialog` used on screens larger than
       `responsiveWidth`.  You may want to set a certain width here, to prevent
       the dialog from dynamically growing.
+- `--responsive-dialog-toolbar`
+    - Applied to the top toolbar shown on mobile layouts.
 
 ## API
 
