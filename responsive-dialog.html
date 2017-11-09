@@ -61,7 +61,8 @@
         </iron-media-query>
 
         <!-- This normal paper-dialog is used on desktop. -->
-        <paper-dialog id="dialog" with-backdrop no-cancel-on-outside-click>
+        <paper-dialog id="dialog" with-backdrop no-cancel-on-outside-click
+                on-iron-overlay-closed="_prevent_bubble_hack">
             <h2>[[title]]</h2>
             <paper-dialog-scrollable id="desktop_slot">
                 <!-- Light DOM goes here. -->
@@ -98,7 +99,8 @@
                 </app-toolbar>
             </app-header>
 
-            <div id="mobile_slot" class="fullscreen-column">
+            <div id="mobile_slot" class="fullscreen-column"
+                    on-iron-overlay-closed="_prevent_bubble_hack">
                 <!-- Light DOM goes here. -->
                 <!-- This light DOM will be moved to the correct place. -->
                 <slot id="slot"></slot>
@@ -152,9 +154,6 @@
                 domIsMobile: { type: Boolean, value: true },
             },
             observers: [ "move_dom(mobile, opened)" ],
-            listeners: {
-                'iron-overlay-closed': '_prevent_bubble_hack',
-            },
             // When we change layouts, move the light DOM to the right place
             // and open or close the paper-dialog as necessary.
             move_dom: function(mobile, opened) {
@@ -186,7 +185,7 @@
                 // Shadow DOM's event retargeting means that this.fire() and
                 // closing the dialog both have e.target === this. The event
                 // from a dropdown in the light DOM does not.
-                if (e.target === this && !(this.mobile && this.opened))
+                if (e.target === this.$.dialog && !(this.mobile && this.opened))
                     this.opened = false;
                 // Otherwise it must be from the light DOM or we're just moving
                 // to mobile. Stop it here.
