@@ -75,6 +75,12 @@ resolve_dialog: function(e, reason) {
 
 `bower install polymer-responsive-dialog`
 
+## responsive-dialog-ns
+
+`responsive-dialog-ns` is the same as `responsive-dialog`, but does not use
+`paper-dialog-scrollable`. This is necessary for including dropdowns on iOS.
+ See PolymerElements/paper-dialog-scrollable#72 for more info.
+
 ## License
 
 This code is under the BSD-2-Clause license.  See the LICENSE file for the full
