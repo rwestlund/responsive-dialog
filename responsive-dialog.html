@@ -168,7 +168,7 @@ class ResponsiveDialog extends Polymer.GestureEventListeners(Polymer.Element) {
     // https://github.com/PolymerElements/iron-overlay-behavior/issues/70
     // https://github.com/PolymerElements/paper-dropdown-menu/issues/87
     _prevent_bubble_hack(e, reason) {
-        // Shadow DOM's event retargeting means that this.fire() and
+        // Shadow DOM's event retargeting means that firing an event and
         // closing the dialog both have e.target === this. The event
         // from a dropdown in the light DOM does not.
         if (e.target === this.$.dialog && !(this.mobile && this.opened))
@@ -189,12 +189,19 @@ class ResponsiveDialog extends Polymer.GestureEventListeners(Polymer.Element) {
         //TODO this tap still highlights the menu icon behind it :/
         e.stopPropagation();
         this.opened = false;
-        this.fire('iron-overlay-closed', { canceled: true });
+        this.dispatchEvent(new CustomEvent("iron-overlay-closed", {
+            bubbles: true,
+            composed: true,
+            detail: { canceled: true },
+        }));
     }
     // Only used on mobile.
     confirm() {
         this.opened = false;
-        this.fire('iron-overlay-closed', { confirmed: true });
+        this.dispatchEvent(new CustomEvent("iron-overlay-closed", {
+            bubbles: true,
+            detail: { confirmed: true },
+        }));
     }
     // If no dismissText, use <- rather than X.
     get_icon(dt) { return dt ? "icons:close" : "icons:arrow-back"; }
