@@ -1,0 +1,19 @@
+{
+    "name": "@rwestlund/responsive-dialog",
+    "version": "2.2.1",
+    "description": "A responsive dialog web component",
+    "keywords": [ "responsive", "dialog", "polymer", "webcomponent" ],
+    "homepage": "https://github.com/rwestlund/responsive-dialog",
+    "license": "BSD-2-Clause",
+    "author": {
+        "name": "Randy Westlund"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rwestlund/responsive-dialog"
+    },
+    "devDependencies": {
+        "bower": "^1.8.4",
+        "polymer-modulizer": "^0.3.0"
+    }
+}
