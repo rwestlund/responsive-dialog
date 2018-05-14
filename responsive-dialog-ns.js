@@ -14,12 +14,12 @@ import '@polymer/paper-dialog/paper-dialog.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/polymer/lib/elements/dom-if.js';
 import { GestureEventListeners } from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 
 class ResponsiveDialogNS extends GestureEventListeners(PolymerElement) {
   static get template() {
-    return `
+    return html`
 <style>
     :host {
         display: none;
