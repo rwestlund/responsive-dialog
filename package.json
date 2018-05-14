@@ -1,6 +1,6 @@
 {
     "name": "@rwestlund/responsive-dialog",
-    "version": "2.2.1",
+    "version": "3.0.0",
     "description": "A responsive dialog web component",
     "keywords": [ "responsive", "dialog", "polymer", "webcomponent" ],
     "homepage": "https://github.com/rwestlund/responsive-dialog",
@@ -12,8 +12,14 @@
         "type": "git",
         "url": "https://github.com/rwestlund/responsive-dialog"
     },
-    "devDependencies": {
-        "bower": "^1.8.4",
-        "polymer-modulizer": "^0.3.0"
+    "dependencies": {
+        "@polymer/app-layout": "^3.0.0-pre.1",
+        "@polymer/iron-icons": "^3.0.0-pre.1",
+        "@polymer/iron-media-query": "^3.0.0-pre.1",
+        "@polymer/paper-button": "^3.0.0-pre.1",
+        "@polymer/paper-dialog": "^3.0.0-pre.1",
+        "@polymer/paper-dialog-scrollable": "^3.0.0-pre.1",
+        "@polymer/paper-icon-button": "^3.0.0-pre.1",
+        "@polymer/polymer": "^3.0.0-pre.1"
     }
 }
