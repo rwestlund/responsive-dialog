@@ -19,13 +19,14 @@ https://material.google.com).
     - What text to use for the confirm button.
     - Default: `"Save"`
 
-## Mixins
+## CSS Properties
 
-- `--responsive-dialog-paper-dialog`
-    - Applied to the `paper-dialog` used on screens larger than
-      `responsiveWidth`.  You may want to set a certain width here, to prevent
-      the dialog from dynamically growing.
-- `--responsive-dialog-toolbar`
+- `--responsive-dialog-paper-dialog-width`
+    - Only applies to screens larger than `responsiveWidth`. You may want to
+      set a certain width here, to prevent the dialog from dynamically growing.
+- `--responsive-dialog-toolbar-background-color`
+    - Applied to the top toolbar shown on mobile layouts.
+- `--responsive-dialog-toolbar-color`
     - Applied to the top toolbar shown on mobile layouts.
 
 ## API

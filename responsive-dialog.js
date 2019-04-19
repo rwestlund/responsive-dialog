@@ -46,11 +46,12 @@ class ResponsiveDialog extends GestureEventListeners(PolymerElement) {
         display: none;
     }
     app-toolbar {
-        @apply --responsive-dialog-toolbar;
+        background-color: var(--responsive-dialog-toolbar-background-color);
+        color:            var(--responsive-dialog-toolbar-color);
     }
     paper-dialog {
         min-width: 25em;
-        @apply --responsive-dialog-paper-dialog;
+        width: var(--responsive-dialog-paper-dialog-width, auto);
     }
     paper-dialog-scrollable {
         margin-top: 0em;
