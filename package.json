@@ -1,6 +1,6 @@
 {
     "name": "@rwestlund/responsive-dialog",
-    "version": "3.0.2",
+    "version": "4.0.0",
     "description": "A responsive dialog web component",
     "keywords": [ "responsive", "dialog", "polymer", "webcomponent" ],
     "homepage": "https://github.com/rwestlund/responsive-dialog",
