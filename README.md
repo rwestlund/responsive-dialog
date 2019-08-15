@@ -11,7 +11,7 @@ https://material.google.com).
       fullscreen layout.
     - Default: `"600px"`
 - **dismissText**
-    - What text tpo use for the dismiss button. If not defined, no dismiss
+    - What text to use for the dismiss button. If not defined, no dismiss
       button will be shown. On mobile, defining this causes an X rather than a
       back arrow.
     - Default: `""`
